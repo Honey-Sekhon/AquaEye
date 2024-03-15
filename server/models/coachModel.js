@@ -8,6 +8,9 @@ const coachSchema = new Schema(
     clubname: String,
     age: Number,
     gender: String,
+    media: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

@@ -35,6 +35,15 @@ const createCoach = async (req, res) => {
   // Create a new Coach object with the extracted properties
   const newCoach = new Coach({ name, email, password, clubName, age, gender });
 
+  if(req.files){
+    let path = '';
+    req.files.forEach(function(files, index, arr){
+      path = path + files.path +','
+    });
+    path = path.substring(0, path.lastIndexOf(","));
+    newCoach.media = path
+  };
+
   try {
     // Save the new coach to the database and await the result
     const savedCoach = await newCoach.save();
