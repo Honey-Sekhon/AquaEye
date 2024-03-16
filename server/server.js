@@ -16,9 +16,12 @@ db.once("open", function () {
   console.log("Connected to MongoDB!!!");
 });
 
-app.get("/api", (req, res) => {
-  res.json({ users: ["user1", "user2", "user3"] });
-});
+// app.get("/api", (req, res) => {
+//   res.json({ users: ["user1", "user2", "user3"] });
+// });
+
+const cors = require("cors");
+app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
