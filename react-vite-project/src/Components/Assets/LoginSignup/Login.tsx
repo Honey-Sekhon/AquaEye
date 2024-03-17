@@ -1,15 +1,46 @@
-import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle your login logic here
-    console.log('Login with:', email, password, rememberMe);
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Login successful", data);
+        console.log("User type:", data.userType);
+        if (data.userType === "athlete") {
+          console.log("Navigating to athlete home");
+          navigate("/athlete-home");
+        } else if (data.userType === "coach") {
+          console.log("Navigating to coach home");
+          navigate("/coach-home");
+        } else {
+          console.log("User type not recognized:", data.userType);
+        }
+      } else {
+        throw new Error(data.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed with error: " + error);
+    }
   };
 
   return (
@@ -18,7 +49,9 @@ const LoginForm: React.FC = () => {
         <div className="col-md-6 align-self-center">
           <div className="border p-4">
             <h2>Login</h2>
-            <p>Doesn't have an account yet? <a href="/signup">Sign Up</a></p>
+            <p>
+              Doesn't have an account yet? <a href="/signup">Sign Up</a>
+            </p>
             <Form onSubmit={handleSubmit}>
               <FormGroup>
                 <Label for="emailAddress">Email Address</Label>
@@ -43,7 +76,9 @@ const LoginForm: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <FormText><a href="/forgot-password">Forgot Password?</a></FormText>
+                <FormText>
+                  <a href="/forgot-password">Forgot Password?</a>
+                </FormText>
               </FormGroup>
               <FormGroup check>
                 <Label check>
@@ -55,7 +90,9 @@ const LoginForm: React.FC = () => {
                   Remember me
                 </Label>
               </FormGroup>
-              <Button color="primary" className="mt-3 w-100">LOGIN</Button>
+              <Button color="primary" className="mt-3 w-100">
+                LOGIN
+              </Button>
             </Form>
             <div className="text-center my-3">or login with</div>
             <div className="d-flex justify-content-center">
@@ -68,9 +105,7 @@ const LoginForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-6">
-          {/* Placeholder for the image */}
-        </div>
+        <div className="col-md-6">{/* Placeholder for the image */}</div>
       </div>
     </div>
   );

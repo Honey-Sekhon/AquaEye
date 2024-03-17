@@ -1,5 +1,5 @@
 const { response } = require("express");
-const Coach = require("../models/coachModel");
+const Coach = require("../models/CoachModel");
 
 const getAllCoaches = async (req, res) => {
   try {

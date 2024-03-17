@@ -1,6 +1,6 @@
 const express = require('express');
 const Router = express.Router();
-const coachController = require('../controllers/coachController');
+const coachController = require('../controllers/CoachController');
 const upload = require('../middleware/upload');
 
 Router.get('/', coachController.getAllCoaches);
