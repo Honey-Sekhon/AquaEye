@@ -6,6 +6,11 @@ const userSchema = new Schema(
         name: String,
         email: String,
         password: String,
+        userType: { // Adding the userType field
+            type: String,
+            enum: ['athlete', 'coach'], // Restrict the value to these two options
+            required: true,
+        }
     }
     ,{timestamps: true}
 )

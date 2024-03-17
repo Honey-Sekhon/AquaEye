@@ -12,10 +12,19 @@ const getAllUsers = async (req, res) => {
 };
 // Define the signup function as an asynchronous function to use await for asynchronous operations
 const signup = async (req, res, next) => {
-  // Check if both email and password are provided in the request body
-  if (!req.body.email || !req.body.password) {
-    // If either is missing, return a 400 Bad Request response with an error message
-    return res.status(400).json({ error: "Email and password are required" });
+  // Check if email, password, and userType are provided in the request body
+  if (!req.body.email || !req.body.password || !req.body.userType) {
+    // If any are missing, return a 400 Bad Request response with an error message
+    return res
+      .status(400)
+      .json({ error: "Email, password, and user type are required" });
+  }
+
+  // Ensure userType is either 'athlete' or 'coach'
+  if (!["athlete", "coach"].includes(req.body.userType)) {
+    return res
+      .status(400)
+      .json({ error: "User type must be either 'athlete' or 'coach'" });
   }
 
   try {
@@ -26,15 +35,15 @@ const signup = async (req, res, next) => {
       return res.status(409).json({ error: "Email already in use" });
     }
 
-    // If no existing user is found, hash the provided password using bcrypt
-    // The second argument (10) is the number of rounds to use for generating the salt
+    // Hash the provided password using bcrypt
     const hashedPass = await bcrypt.hash(req.body.password, 10);
 
-    // Create a new User instance with the provided name, email, and the hashed password
+    // Create a new User instance with the provided name, email, password, and userType
     const user = new User({
       name: req.body.name, // Assuming name is also provided in the request body
       email: req.body.email,
       password: hashedPass,
+      userType: req.body.userType, // Save userType from the request body
     });
 
     // Save the new user instance to the database
@@ -45,12 +54,10 @@ const signup = async (req, res, next) => {
       message: "User registered successfully",
     });
   } catch (err) {
-    // If an error occurs during any part of the try block (e.g., database operation fails),
-    // catch the error and return a 500 Internal Server Error response with an error message
+    // Catch any errors during the operation and return a 500 Internal Server Error response
     res.status(500).json({ error: "An error occurred" });
   }
 };
-
 
 const login = (req, res, next) => {
   const { email, password } = req.body; // Changed 'username' to 'email'

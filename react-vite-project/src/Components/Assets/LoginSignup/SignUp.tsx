@@ -6,34 +6,39 @@ const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType, setUserType] = useState(""); // State to hold the user type selection
 
-  const navigate = useNavigate(); // For redirecting after signup.
+  const navigate = useNavigate(); // For redirecting after signup
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Check if passwords match
+    // Basic validation for matching passwords and user type selection
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      alert("Passwords do not match.");
       return;
     }
 
-    // Signup logic
+    if (!userType) {
+      alert("Please select a user type.");
+      return;
+    }
+
+    // Assuming your API endpoint expects a POST request with email, password, and userType
     try {
       const response = await fetch("http://localhost:5000/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, userType }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         console.log("Signup successful", data);
-        // Redirect user to login page or dashboard page after successful signup
-        navigate("/login"); // this is redirecting to the login page.
+        navigate("/login"); // Redirect to the login page on successful signup
       } else if (response.status === 409) {
         alert("Email already in use. Please use a different email.");
       } else {
@@ -41,7 +46,7 @@ const SignUpForm: React.FC = () => {
       }
     } catch (error) {
       console.error("Signup error:", error);
-      alert(error); // Display the error message to the user
+      alert("An error occurred while signing up. Please try again.");
     }
   };
 
@@ -91,6 +96,22 @@ const SignUpForm: React.FC = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
+
+                <FormGroup>
+                  <Label for="userTypeSelect">I am a:</Label>
+                  <Input
+                    type="select"
+                    name="userType"
+                    id="userTypeSelect"
+                    value={userType}
+                    onChange={(e) => setUserType(e.target.value)}
+                    required
+                  >
+                    <option value="">Select your role</option>
+                    <option value="athlete">Athlete</option>
+                    <option value="coach">Coach</option>
+                  </Input>
+                </FormGroup>
               </FormGroup>
               <Button color="primary" className="mt-3 w-100">
                 SIGN UP
