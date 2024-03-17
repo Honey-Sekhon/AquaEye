@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); 
+const User = require("../models/UserModel"); // Ensure the path matches the location of your UserModel file
 
 const getAllUsers = async (req, res) => {
   try {
@@ -12,9 +12,9 @@ const getAllUsers = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { email, password, userType, username } = req.body;
+  const { email, password, userType } = req.body;
 
-  if (!email || !password || !userType || !username) {
+  if (!email || !password || !userType) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
@@ -23,22 +23,27 @@ const signup = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: "Email or username already in use" });
+      return res.status(409).json({ error: "Email already in use" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      username,
       email,
       password: hashedPassword,
-      userType
+      userType,
     });
 
     const savedUser = await newUser.save();
-    res.status(201).json({ message: "User created successfully", userId: savedUser._id, userType: savedUser.userType });
+    res
+      .status(201)
+      .json({
+        message: "User created successfully",
+        userId: savedUser._id,
+        userType: savedUser.userType,
+      });
   } catch (error) {
     res.status(500).json({ error: "An error occurred during signup" });
   }
@@ -62,7 +67,11 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id, userType: user.userType }, "secretkey", { expiresIn: "1h" });
+    const token = jwt.sign(
+      { userId: user._id, userType: user.userType },
+      "secretkey",
+      { expiresIn: "1h" }
+    );
 
     res.json({ message: "Login successful", token, userType: user.userType });
   } catch (error) {
