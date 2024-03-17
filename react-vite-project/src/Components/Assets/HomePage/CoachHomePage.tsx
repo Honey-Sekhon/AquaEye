@@ -1,46 +1,79 @@
-import React from "react";
-import { Container, Row, Col, Button, Card } from "reactstrap";
+import React from 'react';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  ListGroup,
+  CardHeader,
+  ListGroupItem // Import the correct components
+} from 'reactstrap';
 
-const CoachHomePage: React.FC = () => {
-  // Placeholder data
-  const players = [{ name: "Player 1" }, { name: "Player 2" }]; // Add more players as needed
+const CoachDashboard: React.FC = () => {
+    // Placeholder for state and effects to fetch data
 
-  return (
-    <Container fluid="lg">
-      <Row className="my-4">
-        <Col>
-          <h1>Coach Dashboard</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Card body className="mb-3">
-            <h5>Player Metrics</h5>
-            {/* Placeholder for metrics. In practice, you'd map over data to dynamically create charts or tables */}
-            <p>Performance charts and stats here</p>
-            <Button>Export Data</Button>
-          </Card>
-          <Card body>
-            <h5>Team Feedback</h5>
-            {/* Placeholder for feedback form or announcements */}
-            <p>Feedback form or latest announcements</p>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card body>
-            <h5>Players</h5>
-            <ul>
-              {players.map((player) => (
-                <li key={player.name}>
-                  {player.name} - <a href="#">View Profile</a>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
+    return (
+        <Container fluid>
+            <Row className="my-4">
+                <Col>
+                    <h1>Coach Dashboard</h1>
+                </Col>
+            </Row>
+            <Row>
+                {/* List all players enrolled under the coach */}
+                <Col md={6}>
+                    <Card>
+                        <CardHeader>My Players</CardHeader> {/* Use CardHeader */}
+                        <ListGroup>
+                            {/* Use ListGroupItem */}
+                            <ListGroupItem>Player 1</ListGroupItem>
+                            <ListGroupItem>Player 2</ListGroupItem>
+                        </ListGroup>
+                    </Card>
+                </Col>
+
+                {/* List all players in the club */}
+                <Col md={6}>
+                    <Card>
+                        <CardHeader>Club Players</CardHeader> {/* Use CardHeader */}
+                        <ListGroup>
+                            {/* Use ListGroupItem */}
+                            <ListGroupItem>Club Player 1</ListGroupItem>
+                            <ListGroupItem>Club Player 2</ListGroupItem>
+                        </ListGroup>
+                    </Card>
+                </Col>
+            </Row>
+
+            {/* Training session information */}
+            <Row className="mt-4">
+                <Col md={6}>
+                    <Card>
+                        <CardHeader>Training Sessions</CardHeader> {/* Use CardHeader */}
+                        {/* Placeholder or component for training sessions */}
+                    </Card>
+                </Col>
+
+                {/* Performance chart placeholder */}
+                <Col md={6}>
+                    <Card>
+                        <CardHeader>Player Performance</CardHeader> {/* Use CardHeader */}
+                        {/* Placeholder or component for performance chart */}
+                    </Card>
+                </Col>
+            </Row>
+
+            {/* Announcement section */}
+            <Row className="mt-4">
+                <Col>
+                    <Card>
+                        <CardHeader>Announcements</CardHeader> {/* Use CardHeader */}
+                        {/* Placeholder or component for making announcements */}
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    );
 };
 
-export default CoachHomePage;
+export default CoachDashboard;
