@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 
 const SignUpForm: React.FC = () => {
+  const [username, setUsername] = useState(""); // State for username
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,7 +14,6 @@ const SignUpForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Basic validation for matching passwords and user type selection
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
@@ -24,14 +24,13 @@ const SignUpForm: React.FC = () => {
       return;
     }
 
-    // Assuming your API endpoint expects a POST request with email, password, and userType
     try {
       const response = await fetch("http://localhost:5000/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, userType }),
+        body: JSON.stringify({ username, email, password, userType }),
       });
 
       const data = await response.json();
@@ -40,7 +39,7 @@ const SignUpForm: React.FC = () => {
         console.log("Signup successful", data);
         navigate("/login"); // Redirect to the login page on successful signup
       } else if (response.status === 409) {
-        alert("Email already in use. Please use a different email.");
+        alert("Username or Email already in use. Please use a different one.");
       } else {
         throw new Error(data.error || "Failed to sign up");
       }
@@ -61,6 +60,18 @@ const SignUpForm: React.FC = () => {
               Already have an account? <a href="/login">Login</a>
             </p>
             <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label for="username">Username</Label>
+                <Input
+                  type="text"
+                  name="username"
+                  id="username"
+                  placeholder="Your unique username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </FormGroup>
               <FormGroup>
                 <Label for="emailAddress">Email Address</Label>
                 <Input
@@ -96,22 +107,21 @@ const SignUpForm: React.FC = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-
-                <FormGroup>
-                  <Label for="userTypeSelect">I am a:</Label>
-                  <Input
-                    type="select"
-                    name="userType"
-                    id="userTypeSelect"
-                    value={userType}
-                    onChange={(e) => setUserType(e.target.value)}
-                    required
-                  >
-                    <option value="">Select your role</option>
-                    <option value="athlete">Athlete</option>
-                    <option value="coach">Coach</option>
-                  </Input>
-                </FormGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label for="userTypeSelect">I am a:</Label>
+                <Input
+                  type="select"
+                  name="userType"
+                  id="userTypeSelect"
+                  value={userType}
+                  onChange={(e) => setUserType(e.target.value)}
+                  required
+                >
+                  <option value="">Select your role</option>
+                  <option value="athlete">Athlete</option>
+                  <option value="coach">Coach</option>
+                </Input>
               </FormGroup>
               <Button color="primary" className="mt-3 w-100">
                 SIGN UP

@@ -16,10 +16,10 @@ const getAllUsers = async (req, res) => {
 
 // Handle user registration
 const signup = async (req, res) => {
-  const { email, password, userType } = req.body; // Extract fields from request body
+  const { username, email, password, userType } = req.body; // Extract fields from request body
 
   // Validate required fields
-  if (!email || !password || !userType) {
+  if (!username || !email || !password || !userType) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
@@ -30,7 +30,7 @@ const signup = async (req, res) => {
 
   try {
     // Check for an existing user with the same email
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }, { username });
     if (existingUser) {
       // If user exists, prevent duplicate registration
       return res.status(409).json({ error: "Email already in use" });
@@ -41,6 +41,7 @@ const signup = async (req, res) => {
 
     // Create a new user document
     const newUser = new User({
+      username,
       email,
       password: hashedPassword,
       userType,
@@ -48,7 +49,7 @@ const signup = async (req, res) => {
 
     // Save the new user to the database
     const savedUser = await newUser.save();
-    
+
     // Respond with success message
     res.status(201).json({
       message: "User created successfully",
@@ -63,16 +64,18 @@ const signup = async (req, res) => {
 
 // Handle user login
 const login = async (req, res) => {
-  const { email, password } = req.body; // Extract fields from request body
+  const { login, password } = req.body; // Extract fields from request body
 
   // Validate required fields
-  if (!email || !password) {
+  if (!login || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
     // Look up the user by email
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: login }, { username: login }],
+    });
     if (!user) {
       // User not found
       return res.status(401).json({ error: "Invalid credentials" });

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState(""); // This field will accept both email and username
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,7 +17,8 @@ const LoginForm: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        // Send the 'login' field which could be an email or username
+        body: JSON.stringify({ login, password }),
       });
 
       const data = await response.json();
@@ -26,10 +27,8 @@ const LoginForm: React.FC = () => {
         console.log("Login successful", data);
         console.log("User type:", data.userType);
         if (data.userType === "athlete") {
-          console.log("Navigating to athlete home");
           navigate("/athlete-home");
         } else if (data.userType === "coach") {
-          console.log("Navigating to coach home");
           navigate("/coach-home");
         } else {
           console.log("User type not recognized:", data.userType);
@@ -54,14 +53,14 @@ const LoginForm: React.FC = () => {
             </p>
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label for="emailAddress">Email Address</Label>
+                <Label for="login">Email or Username</Label>
                 <Input
-                  type="email"
-                  name="email"
-                  id="emailAddress"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  name="login"
+                  id="login"
+                  placeholder="you@example.com or your username"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
                   required
                 />
               </FormGroup>
