@@ -1,37 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+import { useUser } from "./UserContext"; // Import the useUser hook
 
 const LoginForm: React.FC = () => {
-  const [login, setLogin] = useState(""); // This field will accept both email and username
+  const [loginField, setLoginField] = useState(""); // Renamed from login to loginField
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-
   const navigate = useNavigate();
+  const { login: loginUser } = useUser(); // Rename destructured login to loginUser
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Send the 'login' field which could be an email or username
-        body: JSON.stringify({ login, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ login: loginField, password }), // Use loginField here
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Login successful", data);
-        console.log("User type:", data.userType);
+        localStorage.setItem('token', data.token); // Store the token
+        loginUser(data); // Use loginUser here to update the context
         if (data.userType === "athlete") {
           navigate("/athlete-home");
         } else if (data.userType === "coach") {
           navigate("/coach-home");
-        } else {
-          console.log("User type not recognized:", data.userType);
         }
       } else {
         throw new Error(data.error || "Login failed");
@@ -53,14 +49,14 @@ const LoginForm: React.FC = () => {
             </p>
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label for="login">Email or Username</Label>
+                <Label for="loginField">Email or Username</Label>
                 <Input
                   type="text"
-                  name="login"
-                  id="login"
+                  name="loginField" // Updated to match the state variable name
+                  id="loginField" // It's good practice for the id to match the name attribute
                   placeholder="you@example.com or your username"
-                  value={login}
-                  onChange={(e) => setLogin(e.target.value)}
+                  value={loginField} // Referencing the updated state variable
+                  onChange={(e) => setLoginField(e.target.value)} // Using setLoginField to update the state
                   required
                 />
               </FormGroup>
@@ -70,7 +66,7 @@ const LoginForm: React.FC = () => {
                   type="password"
                   name="password"
                   id="password"
-                  placeholder="Enter 6 character or more"
+                  placeholder="Enter 6 characters or more"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

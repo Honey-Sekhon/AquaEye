@@ -3,8 +3,13 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 // const coachRoute = require("./routes/CoachRoute");
 const userAuth = require("./routes/UserRoute");
+const athleteRoute = require("./routes/AthleteRoute");
+const profileRoute = require("./routes/ProfileRoute");
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/localDB", {
@@ -26,5 +31,7 @@ app.use(bodyParser.json());
 app.use("/uploads", express.static("uploads"));
 // app.use("/api/coach", coachRoute);
 app.use("/api", userAuth);
+app.use('/api', athleteRoute);
+app.use('/api', profileRoute);
 
 app.listen(5000, () => console.log("server running on port 5000"));

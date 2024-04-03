@@ -1,22 +1,16 @@
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { useUser } from "../Components/Assets/LoginSignup/UserContext";
 
-const NavigationBar: React.FC = () => {
+const NavigationBar = () => {
+  const { user } = useUser();
+
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">Coach Dashboard</Navbar.Brand>
-      <Nav className="mr-auto">
-        <LinkContainer to="/players">
-          <Nav.Link>Players</Nav.Link>
-        </LinkContainer>
-        <LinkContainer to="/sessions">
-          <Nav.Link>Sessions</Nav.Link>
-        </LinkContainer>
-        <LinkContainer to="/performance">
-          <Nav.Link>Performance</Nav.Link>
-        </LinkContainer>
-      </Nav>
+    <Navbar bg="primary" variant="dark">
+      <Navbar.Brand href="#home">
+        {user ? `${user.name}'s Dashboard` : "Dashboard"}
+      </Navbar.Brand>
+      {/* Remaining navbar content */}
     </Navbar>
   );
 };
