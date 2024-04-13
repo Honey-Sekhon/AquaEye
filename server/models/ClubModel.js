@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const clubSchema = new Schema({
   clubName: String,
   location: String,
