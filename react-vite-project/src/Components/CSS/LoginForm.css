@@ -1,0 +1,30 @@
+.login-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+    url("../Images/HomePage.png") no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+}
+
+.title-container {
+  flex: 1;
+  padding-left: 8%; /* Add some padding to the left of the titles */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for better readability */
+}
+
+.login-box {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 5%; /* Add margin to the left and right */
+  background: rgb(0, 42, 73); /* Semi-transparent background for the form */
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for the form */
+  backdrop-filter: blur(
+    5px
+  ); /* This will give a blur effect to the background */
+}

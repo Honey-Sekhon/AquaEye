@@ -1,0 +1,50 @@
+/* Sidebar.css */
+.sidebar {
+  background-color: #CAF0F8; 
+  width: 250px; /* Adjust width as needed */
+  height: 100vh; /* Full height to fill the screen */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: space-between; /* Push main list and sign out button apart */
+  padding-top: 1rem;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+}
+
+.sidebar-header h1 {
+  color: #03045E; /* Light blue color for the header text */
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Style for list items */
+.list-group-item {
+  padding: 1rem;
+  border: none; /* Removes borders */
+  transition: background-color 0.2s ease-in-out; /* Smooth transition for hover */
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #03045E; /* Light blue color for list item text */
+}
+
+/* Style for active state list item */
+.list-group-item.active {
+  background-color: #0077B6; /* Slightly lighter blue color for active item background */
+  border-radius: 10px;
+  color: #FFFFFF; /* White color for active item text */
+  cursor: pointer;
+}
+
+/* Style for all list items on hover, excluding the active and sign out */
+.list-group-item:hover:not(.active):not(.sign-out) {
+  background-color: #90E0EF; /* Lightest blue color on hover for list items */
+  color: #023E8A; /* Darker blue text color when hovered */
+  cursor: pointer;
+}
+
+/* Style for icons */
+.fa-icon {
+  margin-right: 10px; /* Space between icon and text */
+}

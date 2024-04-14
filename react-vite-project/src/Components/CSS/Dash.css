@@ -1,0 +1,15 @@
+/* Dashboard.css */
+.dashboard {
+    display: flex; /* Use flexbox to align children side by side */
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .sidebar {
+    flex: 0 0 250px; /* Sidebar width and not allowed to grow or shrink */
+  }
+  
+  .dashboard-content {
+    flex-grow: 1; /* Allow the content area to take up the remaining space */
+    overflow-y: auto; /* Add scroll to the content area if needed */
+  }
+  

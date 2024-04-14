@@ -1,0 +1,11 @@
+.test-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .test-controls .btn {
+    flex-grow: 1;
+    margin: 0 0.5rem;
+  }
+  
