@@ -19,7 +19,7 @@ const TestingSection: React.FC = () => {
             <TestCard testTitle="Passing" players={players} />
           </div>
           <div className="col-md-4">
-            <TestCard testTitle="Swim Time" players={players} />
+            <TestCard testTitle="Swim Time" players={players} showTimer={true} />
           </div>
         </div>
       </div>

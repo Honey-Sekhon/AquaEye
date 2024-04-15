@@ -1,63 +1,85 @@
-// const express = require("express");
-// const mongoose = require("mongoose");
-// const morgan = require("morgan");
-// const bodyParser = require("body-parser");
-// const coachRoute = require("./routes/coachRoute");
-// const authRoute = require("./routes/authRoute");
-// const app = express();
+// // const express = require("express");
+// // const mongoose = require("mongoose");
+// // const morgan = require("morgan");
+// // const bodyParser = require("body-parser");
+// // const coachRoute = require("./routes/coachRoute");
+// // const authRoute = require("./routes/authRoute");
+// // const app = express();
 
-// mongoose.connect("mongodb://localhost:27017/localDB", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-// db.once("open", function () {
-//   console.log("Connected to MongoDB!!!");
-// });
-
-// // app.get("/api", (req, res) => {
-// //   res.json({ users: ["user1", "user2", "user3"] });
+// // mongoose.connect("mongodb://localhost:27017/localDB", {
+// //   useNewUrlParser: true,
+// //   useUnifiedTopology: true,
+// // });
+// // const db = mongoose.connection;
+// // db.on("error", console.error.bind(console, "connection error:"));
+// // db.once("open", function () {
+// //   console.log("Connected to MongoDB!!!");
 // // });
 
-// const cors = require("cors");
-// app.use(cors());
-// app.use(morgan("dev"));
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
-// app.use("/uploads", express.static("uploads"));
-// app.use("/api/coach", coachRoute);
-// app.use("/api", authRoute);
+// // // app.get("/api", (req, res) => {
+// // //   res.json({ users: ["user1", "user2", "user3"] });
+// // // });
 
-// app.listen(5000, () => console.log("server running on port 5000"));
+// // const cors = require("cors");
+// // app.use(cors());
+// // app.use(morgan("dev"));
+// // app.use(bodyParser.urlencoded({ extended: true }));
+// // app.use(bodyParser.json());
+// // app.use("/uploads", express.static("uploads"));
+// // app.use("/api/coach", coachRoute);
+// // app.use("/api", authRoute);
 
-const express = require('express');
-const { spawn } = require('child_process');
-const cors = require('cors');
+// // app.listen(5000, () => console.log("server running on port 5000"));
 
-const app = express();
-const PORT = 5000;
+// const express = require('express');
+// const { spawn } = require('child_process');
+// const cors = require('cors');
 
-// Apply CORS to allow requests from your frontend
-app.use(cors({
-  origin: 'http://localhost:5173' // Adjust this as needed depending on where your frontend is served
-}));
+// const app = express();
+// const PORT = 5000;
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// // Apply CORS to allow requests from your frontend
+// app.use(cors({
+//   origin: 'http://localhost:5173' // Adjust this as needed depending on where your frontend is served
+// }));
 
-// // Route to serve a simple message to ensure the server is working
-// app.get('/', (req, res) => {
-//   res.send('Raspberry Pi Camera Control API');
-// });
+// // Middleware to parse JSON bodies
+// app.use(express.json());
 
-// // Route to execute a Python script and handle the process output
-// app.get('/api/run-script', (req, res) => {
-//   const script = spawn('python3', ['/path/to/your/script.py']);
+// // // Route to serve a simple message to ensure the server is working
+// // app.get('/', (req, res) => {
+// //   res.send('Raspberry Pi Camera Control API');
+// // });
 
-//   let scriptOutput = '';
+// // // Route to execute a Python script and handle the process output
+// // app.get('/api/run-script', (req, res) => {
+// //   const script = spawn('python3', ['/path/to/your/script.py']);
+
+// //   let scriptOutput = '';
+// //   script.stdout.on('data', (data) => {
+// //     scriptOutput += data.toString();
+// //   });
+
+// //   script.stderr.on('data', (data) => {
+// //     console.error(`stderr: ${data}`);
+// //   });
+
+// //   script.on('close', (code) => {
+// //     if (code !== 0) {
+// //       console.log(`Script exited with code ${code}`);
+// //       res.status(500).send('Script execution failed');
+// //     } else {
+// //       res.send(scriptOutput);
+// //     }
+// //   });
+// // });
+
+// // Route to handle turning on the camera using a POST request
+// app.post('/turn-on-camera', (req, res) => {
+//   const script = spawn('python3', ['C:/Users/sekho/Documents/test.py']);
+//   let output = '';
 //   script.stdout.on('data', (data) => {
-//     scriptOutput += data.toString();
+//     output += data.toString();
 //   });
 
 //   script.stderr.on('data', (data) => {
@@ -66,19 +88,55 @@ app.use(express.json());
 
 //   script.on('close', (code) => {
 //     if (code !== 0) {
-//       console.log(`Script exited with code ${code}`);
-//       res.status(500).send('Script execution failed');
+//       console.error(`Script exited with code ${code}`);
+//       res.status(500).send('Failed :(');
 //     } else {
-//       res.send(scriptOutput);
+//       console.log(`stdout: ${output}`);
+//       res.send('Passed !');
 //     }
 //   });
 // });
 
-// Route to handle turning on the camera using a POST request
-app.post('/turn-on-camera', (req, res) => {
-  const script = spawn('python3', ['/home/capstone/Documents/capstone/test.py']);
+// // Start the server
+// app.listen(PORT, () => {
+//   console.log(`Server running at http://localhost:${PORT}/`);
+// });
 
+
+const express = require('express');
+const { spawn } = require('child_process');
+const cors = require('cors');
+
+const app = express();
+const PORT = 5000;
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
+
+app.use(express.json());
+
+// Dynamic route to execute Python scripts based on test type
+app.post('/dashboard', (req, res) => {
+  const { testType } = req.body; // testType should be 'endurance', 'passing', etc.
+  let scriptPath;
+
+  // Determine which script to run based on the test type
+  switch (testType) {
+    case 'endurance':
+      scriptPath = 'C:/Users/sekho/Documents/endurance.py';
+      break;
+    case 'passing':
+      scriptPath = 'C:/Users/sekho/Documents/passes.py';
+      break;
+    default:
+      res.status(400).send('Test type is not supported');
+      return;
+  }
+
+  const script = spawn('python3', [scriptPath]);
   let output = '';
+
   script.stdout.on('data', (data) => {
     output += data.toString();
   });
@@ -90,15 +148,13 @@ app.post('/turn-on-camera', (req, res) => {
   script.on('close', (code) => {
     if (code !== 0) {
       console.error(`Script exited with code ${code}`);
-      res.status(500).send('Failed :(');
+      res.status(500).send('Failed to execute test');
     } else {
-      console.log(`stdout: ${output}`);
-      res.send('Passed !');
+      res.send(output);
     }
   });
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });
