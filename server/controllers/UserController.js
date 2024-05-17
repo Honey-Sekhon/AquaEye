@@ -17,17 +17,17 @@ const getAllUsers = async (req, res) => {
 
 // Handle user registration
 const signup = async (req, res) => {
-  const { username, email, password, userType } = req.body; // Extract fields from request body
+  const { username, email, password } = req.body; // Extract fields from request body
 
   // Validate required fields
-  if (!username || !email || !password || !userType) {
+  if (!username || !email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   // Validate userType to be one of the predefined roles
-  if (!["athlete", "coach", "admin"].includes(userType)) {
-    return res.status(400).json({ error: "Invalid user type" });
-  }
+  // if (!["athlete", "coach", "admin"].includes(userType)) {
+  //   return res.status(400).json({ error: "Invalid user type" });
+  // }
 
   try {
     // Check for an existing user with the same email
@@ -45,7 +45,7 @@ const signup = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      userType,
+      // userType,
     });
 
     // Save the new user to the database
@@ -63,7 +63,7 @@ const signup = async (req, res) => {
     res.status(201).json({
       message: "User and profile created successfully",
       userId: savedUser._id,
-      userType: savedUser.userType,
+      // userType: savedUser.userType,
     });
   } catch (error) {
     // Handle errors that occur during signup

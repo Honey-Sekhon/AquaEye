@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// const coachRoute = require("./routes/CoachRoute");
 const userAuth = require("./routes/UserRoute");
 const athleteRoute = require("./routes/AthleteRoute");
 const profileRoute = require("./routes/ProfileRoute");

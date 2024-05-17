@@ -1,31 +1,35 @@
 const Athlete = require("../models/AthleteModel");
 const Profile = require("../models/ProfileModel");
-
-// Create a new athlete
-exports.createAthlete = async (req, res) => {
-  // Implementation
-};
-
-// Get all athletes
-exports.getAllAthletes = async (req, res) => {
-  // Implementation
+const getAllAthletes = async (req, res) => {
   try {
-    const athletes = await Athlete.find().populate("profile").exec();
-    const athleteDetails = athletes.map((athlete) => ({
-      id: athlete._id,
-      position: athlete.position,
-      height: athlete.height,
-      weight: athlete.weight,
-      experience: athlete.experience,
-      profile: athlete.profile,
-    }));
-    res.json(athleteDetails);
+    const athletes = await Athlete.find();
+    res.json(athletes);
+    console.log(athletes);
   } catch (error) {
-    console.error("Error fetching athletes:", error);
-    res.status(500).json({ message: "Failed to fetch athletes" });
+    res.status(500).json({ message: error.message });
   }
 };
 
+exports.createAthlete = async (req, res) => {
+  try {
+    const newAthlete = new Athlete({
+      // Assuming you have the necessary athlete fields in the request body
+      profile: req.body.profile,
+      club: req.body.club,
+      team: req.body.team,
+      position: req.body.position,
+      height: req.body.height,
+      weight: req.body.weight,
+      age: req.body.age,
+      experience: req.body.experience
+    });
+
+    const savedAthlete = await newAthlete.save();
+    res.status(201).json(savedAthlete);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 // Get a single athlete by ID (including profile, team details)
 exports.getAthleteById = async (req, res) => {
   // Implementation
@@ -41,3 +45,4 @@ exports.deleteAthleteById = async (req, res) => {
   // Implementation
 };
 
+// module.exports = { getAllAthletes };
