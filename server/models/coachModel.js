@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const coachSchema = new Schema({
   profile: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
   clubs: [{ type: Schema.Types.ObjectId, ref: "Club", required: true }],
-  qualifications: String,
+  coachinglevel: String,
   bio: String,
 });
 

@@ -4,10 +4,10 @@ const bcrypt = require('bcryptjs');
 
 const UserSchema = new Schema(
   {
-    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ["athlete", "coach", "user"], default: "user" },
+    photo: String, // URL to the photo
+    role: { type: String, enum: ["athlete", "coach", "user","admin","board"], default: "user" },
     club: { type: Schema.Types.ObjectId, ref: "Club", default: null },
   },
   { timestamps: true }
