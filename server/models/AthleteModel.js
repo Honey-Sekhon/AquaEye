@@ -7,8 +7,8 @@ const athleteSchema = new Schema({
   position: String,
   height: Number,
   weight: Number,
-  age: Number,
-  experience: String,
+  wingspan: Number,
+  hundredM : Number,
 });
 
 const Athlete = mongoose.model("Athlete", athleteSchema);

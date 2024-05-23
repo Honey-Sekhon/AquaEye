@@ -16,5 +16,7 @@ const clubSchema = new Schema({
   },
 });
 
+// If the user doesn't enter these details we need to give them some random values or can they be left empty.
+
 const Club = mongoose.model("Club", clubSchema);
 module.exports = Club;
