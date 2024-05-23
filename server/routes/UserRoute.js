@@ -1,12 +1,13 @@
 const express = require("express");
-const Router = express.Router();
+const router = express.Router();
 const UserController = require("../controllers/UserController");
-const authToken = require('../middleware/AuthenticationToken');
+const auth = require('../middleware/auth');
+const rbac = require('../middleware/rbac');
 
-Router.get("/", UserController.getAllUsers);
-Router.post("/signup", UserController.signup);
-Router.post("/login", UserController.login);
-// New route to get current user info
-Router.get("/me", authToken.authenticateToken , UserController.getCurrentUser);
-Router.post("/refreshToken", UserController.refreshToken);
-module.exports = Router
+router.get("/all", auth, rbac("admin"), UserController.getAllUsers);
+router.post("/signup", UserController.signup);
+router.post("/login", UserController.login);
+router.delete("/delete/:id", auth, rbac("admin"), UserController.deleteUser);
+router.post("/add-user", auth, rbac("admin"), UserController.addUser);
+
+module.exports = router;

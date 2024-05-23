@@ -7,16 +7,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const userAuth = require("./routes/UserRoute");
-const athleteRoute = require("./routes/AthleteRoute");
-const profileRoute = require("./routes/ProfileRoute");
-const coachRoute = require("./routes/CoachRoute");
-const trainingSessionRoute = require("./routes/TrainingSessionRoute");
+const clubRoutes = require("./routes/ClubRoutes");
+
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/localDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGO_URI);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -29,11 +24,8 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use("/uploads", express.static("uploads"));
-app.use("/api/coach", coachRoute);
-app.use("/api", userAuth);
-app.use('/api', athleteRoute);
-app.use('/api', profileRoute);
-app.use('/api/trainingSessions', trainingSessionRoute);
+
+app.use("/user", userAuth);
+app.use("/club", clubRoutes);
 
 app.listen(5000, () => console.log("server running on port 5000"));
